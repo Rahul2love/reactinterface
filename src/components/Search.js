@@ -1,6 +1,16 @@
 import { BiSearch, BiCaretDown, BiCheck } from "react-icons/bi";
+import { useState } from "react";
 
-const DropDown = () => {
+const DropDown = ({
+  toggle,
+  sortBy,
+  onSortByChange,
+  orderBy,
+  onOrderByChange,
+}) => {
+  if (!toggle) {
+    return null;
+  }
   return (
     <div
       className="origin-top-right absolute right-0 mt-2 w-56
@@ -13,41 +23,57 @@ const DropDown = () => {
         aria-labelledby="options-menu"
       >
         <div
+          // make div button by adding onClick event :- trigger onSortByChange :- pass name of the field to sort by = petName
+          onClick={() => onSortByChange("petName")}
+          className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex justify-between cursor-pointer"
+          role="menuitem"
+          // checkmark = BiCheck put inside {} only show when user click that section
+        >
+          Pet Name {sortBy === "petName" && <BiCheck />}
+        </div>
+
+        <div
+          onClick={() => onSortByChange("ownerName")}
           className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex justify-between cursor-pointer"
           role="menuitem"
         >
-          Pet Name <BiCheck />
+          Owner Name {sortBy === "ownerName" && <BiCheck />}
         </div>
         <div
+          onClick={() => onSortByChange("aptDate")}
           className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex justify-between cursor-pointer"
           role="menuitem"
         >
-          Owner Name <BiCheck />
+          Date {sortBy === "aptDate" && <BiCheck />}
         </div>
         <div
-          className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex justify-between cursor-pointer"
-          role="menuitem"
-        >
-          Date <BiCheck />
-        </div>
-        <div
+          onClick={() => onOrderByChange("asc")}
           className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex justify-between cursor-pointer border-gray-1 border-t-2"
           role="menuitem"
         >
-          Asc <BiCheck />
+          Asc {orderBy === "asc" && <BiCheck />}
         </div>
         <div
+          onClick={() => onOrderByChange("desc")}
           className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex justify-between cursor-pointer"
           role="menuitem"
         >
-          Desc <BiCheck />
+          Desc {orderBy === "desc" && <BiCheck />}
         </div>
       </div>
     </div>
   );
 };
 
-const Search = () => {
+const Search = ({
+  query,
+  onQueryChange,
+  sortBy,
+  onSortByChange,
+  orderBy,
+  onOrderByChange,
+}) => {
+  let [toggleSort, setToggleSort] = useState(false);
   return (
     <div className="py-5">
       <div className="mt-1 relative rounded-md shadow-sm">
@@ -59,7 +85,10 @@ const Search = () => {
           type="text"
           name="query"
           id="query"
-          value=""
+          value={query}
+          onChange={(event) => {
+            onQueryChange(event.target.value);
+          }}
           className="pl-8 rounded-md focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300"
           placeholder="Search"
         />
@@ -67,6 +96,9 @@ const Search = () => {
           <div>
             <button
               type="button"
+              onClick={() => {
+                setToggleSort(!toggleSort);
+              }}
               className="justify-center px-4 py-2 bg-blue-400 border-2 border-blue-400 text-sm text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 flex items-center"
               id="options-menu"
               aria-haspopup="true"
@@ -74,7 +106,13 @@ const Search = () => {
             >
               Sort By <BiCaretDown className="ml-2" />
             </button>
-            <DropDown />
+            <DropDown
+              toggle={toggleSort}
+              sortBy={sortBy}
+              onSortByChange={(mySort) => onSortByChange(mySort)}
+              orderBy={orderBy}
+              onOrderByChange={(myOrder) => onOrderByChange(myOrder)}
+            />
           </div>
         </div>
       </div>
